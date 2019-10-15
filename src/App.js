@@ -9,8 +9,9 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
 import home from './pages/home'
 import login from './pages/login'
 import signup from './pages/signup'
+import user from './pages/user'
 //Components
-import Navbar from './components/Navbar'
+import Navbar from './components/layout/Navbar'
 //util
 import themeFile from './util/theme'
 import AuthRoute from './util/AuthRoute'
@@ -22,6 +23,8 @@ import { logoutUser, getUserData } from './redux/actions/userActions'
 
 import jwtDecode from 'jwt-decode'
 import axios from 'axios'
+
+// axios.defaults.baseUrl = 'https://europe-west1-socialapp-cba28.cloudfunctions.net/api'
 
 const theme = createMuiTheme(themeFile)
 
@@ -50,6 +53,8 @@ function App() {
               <Route exact path='/' component={home} />
               <AuthRoute exact path='/login' component={login} />
               <AuthRoute exact path='/signup' component={signup} />
+              <Route exact path='/users/:handle' component={user} />
+              <Route exact path='/users/:handle/scream/:screamId' component={user} />
             </Switch>
           </div>
         </Router>

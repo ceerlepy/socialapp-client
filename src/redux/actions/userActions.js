@@ -4,7 +4,8 @@ import {
   CLEAR_ERRORS,
   LOADING_UI,
   SET_UNAUTHENTICATED,
-  LOADING_USER
+  LOADING_USER,
+  MARK_NOTIFICATIOS_READ
 } from '../types'
 import axios from 'axios'
 
@@ -84,6 +85,15 @@ export const getUserData = () => (dispatch) => {
         type: SET_USER,
         payload: res.data
       })
+    })
+    .catch((err) => console.error(err))
+}
+
+export const markNotificationsRead = (notificationIds) => (dispatch) => {
+  axios
+    .post(`${proxy}/notifications`, notificationIds)
+    .then(() => {
+      dispatch({ type: MARK_NOTIFICATIOS_READ })
     })
     .catch((err) => console.error(err))
 }

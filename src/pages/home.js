@@ -1,39 +1,26 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Scream from '../components/scream/Scream'
+import Profile from '../components/profile/Profile'
+import ScreamSkeleton from '../util/ScreamSkeleton'
+//MUI stuff
 import Grid from '@material-ui/core/Grid'
-import axios from 'axios'
-import Scream from '../components/Scream'
-import Profile from '../components/Profile'
+//REDUX
+import { connect } from 'react-redux'
+import { getScreams } from '../redux/actions/dataActions'
 
 class home extends Component {
-  state = {
-    screams: null
-  }
-
   componentDidMount() {
-    let proxy =
-      'https://cors-anywhere.herokuapp.com/https://europe-west1-socialapp-cba28.cloudfunctions.net/api'
-
-    // axios.defaults.proxy.host = proxy;
-    // axios.defaults.proxy.port = ...
-    // axios.defaults.proxy.auth.username = ...
-    // axios.defaults.proxy.auth.password = ...
-
-    axios
-      .get(`${proxy}/screams`)
-      .then((res) => {
-        console.log(res.data)
-        this.setState({
-          screams: res.data
-        })
-      })
-      .catch((err) => console.log(err))
+    this.props.getScreams()
   }
 
   render() {
-    let recentScreamsMarkup = this.state.screams ? (
-      this.state.screams.map((scream) => <Scream scream={scream} key={scream.screamId} />)
+    const { screams, loading } = this.props.data
+
+    let recentScreamsMarkup = loading ? (
+      <ScreamSkeleton />
     ) : (
-      <p>Loading...</p>
+      screams.map((scream) => <Scream scream={scream} key={scream.screamId} />)
     )
     return (
       <Grid container spacing={10}>
@@ -48,4 +35,16 @@ class home extends Component {
   }
 }
 
-export default home
+home.propTypes = {
+  data: PropTypes.object.isRequired,
+  getScreams: PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  data: state.data
+})
+
+export default connect(
+  mapStateToProps,
+  { getScreams }
+)(home)
